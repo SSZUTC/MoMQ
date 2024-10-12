@@ -19,6 +19,7 @@ from sqlglot import parse_one, diff
 from sqlglot.diff import Keep
 from database.PG import PG
 from database.Mysql import MySQL
+from database.SQLite import SQLite
 from utils.value_match import result_eq, df_sim_pair, get_jw_distance
 from utils.df_eval import subset_df
 import pandas as pd
@@ -79,7 +80,7 @@ def calculate_sql_metrics(label_sqls, pred_sqls, eval_data, eval_result_map):
         db_name = split_info[0]
         sql_type = split_info[1]
         
-        if sql_type not in ['postgresql', 'mysql']:
+        if sql_type not in ['postgresql', 'mysql', 'sqlite']:
             continue
 
         if sql_type == 'postgresql':
@@ -100,6 +101,8 @@ def calculate_sql_metrics(label_sqls, pred_sqls, eval_data, eval_result_map):
                 db_conn = PG(db_name=db_name)
             elif sql_type == 'mysql':
                 db_conn = MySQL(db_name=db_name)
+            elif sql_type == 'sqlite':
+                db_conn = SQLite(db_path=f'/home/linzhisheng/MOMQ/MoMQ/database/spider_database/database/{db_name}/{db_name}.sqlite')
             else:
                 raise NotImplementedError
             last_db_name = db_name
@@ -224,7 +227,7 @@ def train():
     tokenizer, model = load_tokenizer_and_model(model_args, training_args, lora_args)
 
     train_data_raw = load_dataset('json', data_files=data_args.data_path)['train']
-    eval_data_raw = load_dataset('json', data_files=data_args.eval_data_path)['train']
+    eval_data_raw = load_dataset('json', data_files=data_args.eval_data_path)['train'].select(range(100))
     # sample data
     if data_args.train_dialects_num_map:
         train_data_raw = sample_data(train_data_raw, data_args.train_dialects_num_map)
@@ -323,6 +326,7 @@ def train():
             'postgresql': {},
             'mysql': {},
             'cypher': {},
+            'sqlite': {},
             'ngql': {}
         }
         

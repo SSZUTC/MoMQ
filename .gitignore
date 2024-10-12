@@ -1,4 +1,9 @@
-env/**
+env
 **.pt
 **/__pycache__/**
 .DS_Store
+cache
+spider_database
+wandb
+**.json
+output

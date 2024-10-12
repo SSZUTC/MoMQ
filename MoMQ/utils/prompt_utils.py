@@ -28,6 +28,21 @@ nl2mysql_template = """你是一名MySQL专家，现在需要阅读并理解下�
 
 ```sql"""
 
+nl2sqlite_template = """你是一名SQLite专家，现在需要阅读并理解下面的【数据库schema】描述，以及可能用到的【参考信息】，并运用SQLite知识生成sql语句回答【用户问题】。
+【用户问题】
+{question}
+
+【数据库schema】
+{db_schema}
+
+【参考信息】
+{evidence}
+
+【用户问题】
+{question}
+
+```sql"""
+
 nl2pgsql_template = """你是一名PostgreSQL专家，现在需要阅读并理解下面的【数据库schema】描述，以及可能用到的【参考信息】，并运用PostgreSQL知识生成sql语句回答【用户问题】。
 【用户问题】
 {question}
@@ -137,6 +152,8 @@ def gen_train_prompt(idx: int, data_item: dict, sql_type: str) -> dict:
         prompt = nl2cypher_template.format(db_schema=db_schema.strip(), question=question, evidence=evidence)
     elif sql_type == "ngql":
         prompt = nl2ngql_template.format(db_schema=db_schema.strip(), question=question, evidence=evidence)
+    elif sql_type == "sqlite":
+        prompt = nl2sqlite_template.format(db_schema=db_schema.strip(), question=question, evidence=evidence)
     else:
         prompt = sqlcoder_template.format(db_schema=db_schema.strip(), question=question)
 

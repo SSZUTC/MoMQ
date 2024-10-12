@@ -6,7 +6,7 @@ export HF_HOME='../../cache'
 export WANDB_PROJECT='nl2sql_0906_moe'
 # export WANDB_PROJECT='nl2sql_0730'
 # export CUDA_VISIBLE_DEVICES=0,1,2,3
-REPORT_TO="wandb"
+REPORT_TO="none"
 RESUME=False
 
 run_training() {
